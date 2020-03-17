@@ -1,0 +1,176 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int fact (int sayi) {
+	if (sayi==1)
+		return 1;
+	else
+		return sayi*fact(sayi-1);
+}
+
+double d_us_al(double sayi,int us) {
+	if (us==0)
+		return 1;
+	else if (us==1)
+		return sayi;
+	else if (us%2==0)
+		return d_us_al(sayi,us/2)*d_us_al(sayi,us/2);
+	else {
+		double temp;
+		temp=d_us_al(sayi,us/2)*d_us_al(sayi,us/2)*sayi;
+		return temp;
+	}
+}
+int us_al(int sayi,int us) {
+	if (us==0)
+		return 1;
+	else if (us==1)
+		return sayi;
+	else if (us%2==0)
+		return us_al(sayi,us/2)*us_al(sayi,us/2);
+	else {
+		int temp;
+		temp=us_al(sayi,us/2)*us_al(sayi,us/2)*sayi;
+		return temp;
+	}
+}
+
+int sayi_uzunlugu(int sayi) {
+	int sayac=1;
+	while(sayi%10!=sayi) {
+		sayi/=10;
+		sayac+=1;
+	}
+	return sayac;
+}
+
+int taban_degistirme1(int sayi,int taban,int uzunluk) {
+	int temp,degisen=0;
+	for(int i=0; sayi%taban!=sayi; i++) {
+		temp=sayi%taban;
+		sayi=sayi/taban;
+		temp=temp*us_al(10,i);
+		degisen+=temp;
+		temp=i+1;
+	}
+	degisen+=sayi*us_al(10,temp);
+	return degisen;
+}
+int taban_degistirme2(int sayi,int taban,int uzunluk) {
+	int temp,degisen=0;
+	for(int i=0; sayi%10!=sayi; i++) {
+		temp=sayi%10;
+		temp*=us_al(taban,i);
+		sayi/=10;
+		degisen+=temp;
+		temp=i+1;
+	}
+	degisen+=sayi*us_al(taban,temp);
+	return degisen;
+}
+double sin(double radyan) {
+	double sonuc=0;
+	for (int i=0; i<15; i++) {
+		sonuc+=(us_al(-1,i)*d_us_al(radyan,2*i+1))/fact(2*i+1);
+	}
+
+	return sonuc;
+}
+double cos(double radyan) {
+	double sonuc=1;
+	for (int i=1; i<15; i++) {
+		sonuc+=(us_al(-1,i)*d_us_al(radyan,2*i))/fact(2*i);
+	}
+
+	return sonuc;
+}
+double babil_kok(double sayi){
+	double n=(sayi+1)/2;
+	for(int i=0;i<100;i++){
+		n=((sayi/n)+n)/2;
+	}
+	return n;
+}
+int main () {
+	int secim;
+	int i=1;
+	while(i) {
+		printf("\n*********************\n  i.Taban degistirme(10luktabandan[10dan daha kucuk tabanlar])\n  ii.Taban degistirme(10luk taban[10dan daha kucuk tabanlar])\n iii.Us alma\n  iv.Kok hesaplama\n   v.Sin()[birinci bolge icin]\n  vi.Cos()[birinci bolge icin]\n vii.Toplama\nviii.Cikarma\n  ix.Carpma\n   x.Bolme\n  xi.Cikis icin giriniz\n*********************\n");
+		scanf("%d",&secim);
+		switch(secim) {
+			case 1:
+				printf("Sayiyi ve tabani giriniz:");
+				int sayi,taban,uzunluk;
+				scanf("%d %d",&sayi,&taban);
+				uzunluk=sayi_uzunlugu(sayi);
+				sayi=taban_degistirme1(sayi,taban,uzunluk);
+				printf("Sayiniz %d %d tabaninda",sayi,taban);
+				break;
+			case 2:
+				printf("Sayiyi ve tabani giriniz:");
+				scanf("%d %d",&sayi,&taban);
+				uzunluk=sayi_uzunlugu(sayi);
+				sayi=taban_degistirme2(sayi,taban,uzunluk);
+				printf("Sayiniz %d 10 tabaninda",sayi);
+				break;
+			case 3:
+				printf("Ussunu almak istediginiz sayi:");
+				scanf("%d",&sayi);
+				printf("Ussu giriniz:");
+				int us;
+				scanf("%d",&us);
+				printf("%d nin %d kuvveti %d dir",sayi,us,us_al(sayi,us));
+				break;
+			case 4:
+				double x;
+				printf("Koku yaziniz:");
+				scanf("%lf",&x);
+				printf("Kok¯%lf¯=%lf",x,babil_kok(x));
+				break;
+			case 5:
+				int derece;
+				printf("Derece giriniz:(0-360 arasi)");
+				scanf("%d",&derece);
+				double radyan;
+				radyan=derece/57.2957795130822;
+				printf("sin(%d)=%lf",derece,sin(radyan));
+				break;
+			case 6:
+				printf("Derece giriniz:(0-360 arasi)");
+				scanf("%d",&derece);
+				radyan=derece/57.2957795130822;
+				printf("cos(%d)=%lf",derece,cos(radyan));
+				break;
+			case 7:
+				int sayi2;
+				printf("Toplamak istediginiz sayilari giriniz:");
+				scanf("%d %d",&sayi,&sayi2);
+				printf("%d+%d=%d",sayi,sayi2,sayi+sayi2);
+				break;
+			case 8:
+				printf("Cikarmak istediginiz sayilari giriniz:");
+				scanf("%d %d",&sayi,&sayi2);
+				printf("%d+%d=%d",sayi,sayi2,sayi-sayi2);
+				break;
+			case 9:
+				printf("Carpmak istediginiz sayilari giriniz:");
+				scanf("%d %d",&sayi,&sayi2);
+				printf("%d+%d=%d",sayi,sayi2,sayi*sayi2);
+				break;
+			case 10:
+				printf("Bolmek istediginiz sayilari giriniz(bolunen ve bolen seklinde):");
+				scanf("%d %d",&sayi,&sayi2);
+				printf("%d/%d=%f",sayi,sayi2,float(sayi/sayi2));
+				break;
+			case 11:
+				i=0;
+				printf("Iyi gunler dileriz....\n\n\aProgram kapatiliyor.....");
+				break;
+			default:
+				printf("hatali giris yaptiniz...");
+				break;
+		}
+
+	}
+	return -1;
+}
